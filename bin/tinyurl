@@ -1,0 +1,45 @@
+#!/usr/bin/env ruby
+require 'net/http'
+
+# ---- FLAGS AND GLOBAL VARS ----
+
+# set this to true if we want to automatically copy the...
+# ...correctly spelled word to the clipboard.
+# NOTE: Requires the 'xclip' binary on Linux.
+$ENABLE_COPY_TO_CLIPBOARD = true
+ENCODE_URL=URI.encode('http://v.gd/create.php?format=simple&url=')
+
+# ---- INIT LOGIC ----
+
+# if we're enabling the clipboard functionality, require the 'clipboard' gem.
+if $ENABLE_COPY_TO_CLIPBOARD
+    require 'clipboard'
+    # if we're running on Linux, make sure that 'xclip' is available...
+    # ...and quit if it isn't since clipboard won't work without it.
+    if RUBY_PLATFORM.include?("linux")
+        xclip = `which xclip`.strip
+        if xclip.empty?
+            abort("You need the 'xclip' binary for copy-to-clipboard functionality to work properly under Linux")
+        end
+    end
+end
+
+if ARGV.first.strip.empty?
+    abort('Please specify a URL to shorten.')
+end
+
+input_url = URI.encode(ARGV.first.strip)
+api_full_url = URI.parse(ENCODE_URL + input_url)
+#puts Net::HTTP.get_response( URI.parse ( URI.encode( encode_url ) + URI.encode( ARGV.first.strip ) ) ).body
+tinyurl = Net::HTTP.get_response(api_full_url).body
+
+if tinyurl =~ /^http:\/\/v.gd\/(.*)/
+    if $ENABLE_COPY_TO_CLIPBOARD
+        Clipboard.copy(tinyurl)
+        puts "Copied #{tinyurl} to your clipboard."
+    else
+        puts tinyurl
+    end
+else
+    puts "v.gd API returned an error: #{tinyurl}"
+end

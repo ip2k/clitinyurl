@@ -14,11 +14,14 @@ require 'rake'
 require 'jeweler'
 Jeweler::Tasks.new do |gem|
   # gem is a Gem::Specification... see http://docs.rubygems.org/read/chapter/20 for more options
-  gem.name = "clitinyurl"
-  gem.homepage = "http://github.com/ip2k/clitinyurl"
-  gem.license = "MIT"
-  gem.summary = %Q{TODO: one-line summary of your gem}
-  gem.description = %Q{TODO: longer description of your gem}
+  gem.name = "eightshit-avatar-update"
+  gem.add_dependency 'net/http'
+  gem.add_dependency 'clipboard'
+  gem.executables = ['tinyurl']
+  gem.homepage = "http://seanp2k.com"
+  gem.license = "Creative Commons by-nc-sa"
+  gem.summary = "Shortens a URL using the v.gd API (same thing as is.gd)"
+  gem.description = "Uses the hacked-up source of the shurl gem with the v.gd API and provides an executable CLI wrapper to shorten URLs directly from your terminal"
   gem.email = "github@seanp2k.endjunk.com"
   gem.authors = ["ip2k"]
   # dependencies defined in Gemfile
@@ -47,7 +50,7 @@ Rake::RDocTask.new do |rdoc|
   version = File.exist?('VERSION') ? File.read('VERSION') : ""
 
   rdoc.rdoc_dir = 'rdoc'
-  rdoc.title = "clitinyurl #{version}"
+  rdoc.title = "eightshit-avatar-update #{version}"
   rdoc.rdoc_files.include('README*')
   rdoc.rdoc_files.include('lib/**/*.rb')
 end
