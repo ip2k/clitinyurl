@@ -7,6 +7,8 @@ require 'net/http'
 # ...correctly spelled word to the clipboard.
 # NOTE: Requires the 'xclip' binary on Linux.
 $ENABLE_COPY_TO_CLIPBOARD = true
+
+# encode the URL for the shortener API.
 ENCODE_URL=URI.encode('http://v.gd/create.php?format=simple&url=')
 
 # ---- INIT LOGIC ----
@@ -24,22 +26,37 @@ if $ENABLE_COPY_TO_CLIPBOARD
     end
 end
 
+# if the user doesn't pass us a URL, tell them and quit.
 if ARGV.first.strip.empty?
     abort('Please specify a URL to shorten.')
 end
 
+# encode the URL specified by the user, removing \r\n at the end.
 input_url = URI.encode(ARGV.first.strip)
+
+# generate the full request URL and run it through URI.parse just to be safe.
 api_full_url = URI.parse(ENCODE_URL + input_url)
-#puts Net::HTTP.get_response( URI.parse ( URI.encode( encode_url ) + URI.encode( ARGV.first.strip ) ) ).body
+
+# get the response body (shortened URL) from the shortening service API
 tinyurl = Net::HTTP.get_response(api_full_url).body
 
+# if the API gives us back a valid URL,
 if tinyurl =~ /^http:\/\/v.gd\/(.*)/
+    # if we have copy-to-clipboard functionality enabled,
     if $ENABLE_COPY_TO_CLIPBOARD
+        # set the clipboard contents to the tiny URL...
         Clipboard.copy(tinyurl)
+        # and display it to the user.
         puts "Copied #{tinyurl} to your clipboard."
+        exit(0)
     else
+        # if there is no clipboard functionality...
+        # ...just display the tiny URL to the user.
         puts tinyurl
+        exit(0)
     end
 else
-    puts "v.gd API returned an error: #{tinyurl}"
+    # if the shortening service API doesn't return...
+    # ...a valid URL, quit.
+    abort("v.gd API returned an error: #{tinyurl}")
 end

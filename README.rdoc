@@ -1,6 +1,6 @@
 = clitinyurl
 
-Description goes here.
+Uses the v.gd API and provides an executable CLI wrapper to shorten URLs directly from your terminal and copies the short URL to your clipboard
 
 == Contributing to clitinyurl
  
