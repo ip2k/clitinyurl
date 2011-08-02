@@ -26,7 +26,8 @@ Gem::Specification.new do |s|
     "README.rdoc",
     "Rakefile",
     "VERSION",
-    "bin/tinyurl"
+    "bin/tinyurl",
+    "clitinyurl.gemspec"
   ]
   s.homepage = %q{http://seanp2k.com}
   s.licenses = ["Creative Commons by-nc-sa"]
